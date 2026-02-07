@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>Rose Day Surprise 🌹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rose-pink: #ff4d6d;
+            --deep-red: #c9184a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: radial-gradient(circle, #ffccd5, #ffb3c1, #ff8fa3);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Background Hearts */
+        .heart-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: var(--rose-pink);
+            animation: float linear infinite;
+        }
+
+        /* Main Card */
+        #card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 25px 15px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .screen { display: none; animation: fadeIn 0.8s ease; }
+        .active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--deep-red); }
+        p { font-size: 0.9rem; color: #444; margin: 10px 0; }
+
+        /* 6 Photo Grid with Zoom Animation */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .photo-box {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: white;
+            padding: 4px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.5); /* Start small for zoom effect */
+            transition: transform 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        /* Zoom-in animation for photos when screen becomes active */
+        .active .photo-box {
+            animation: zoomIn 0.6s forwards;
+        }
+
+        @keyframes zoomIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Staggered delay for each photo */
+        .photo-box:nth-child(1) { animation-delay: 0.1s; }
+        .photo-box:nth-child(2) { animation-delay: 0.2s; }
+        .photo-box:nth-child(3) { animation-delay: 0.3s; }
+        .photo-box:nth-child(4) { animation-delay: 0.4s; }
+        .photo-box:nth-child(5) { animation-delay: 0.5s; }
+        .photo-box:nth-child(6) { animation-delay: 0.6s; }
+
+        .photo-box img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* Hover Zoom Effect */
+        .photo-box:hover {
+            transform: scale(1.15) !important;
+            z-index: 5;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn {
+            background: var(--rose-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            transition: 0.3s;
+        }
+        .btn:hover { background: var(--deep-red); transform: scale(1.05); }
+
+        .roses { font-size: 45px; margin: 15px 0; display: flex; justify-content: center; gap: 15px; }
+        .rose { cursor: pointer; transition: 0.3s; }
+        .rose:hover { transform: scale(1.3); }
+
+        .letter {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 6px solid var(--rose-pink);
+            font-style: italic;
+        }
+
+        .final-note-content {
+            background: #fffafa;
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px dashed var(--rose-pink);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="" type="audio/mpeg">
+    </audio>
+
+    <div class="heart-bg" id="heartBg"></div>
+
+    <div id="card">
+        <div id="s1" class="screen active">
+            <div style="font-size: 50px;">💖</div>
+            <h1>Happy Rose Day Baby</h1>
+            <p>I have a little surprise for the most beautiful person... ✨</p>
+            <button class="btn" onclick="startExperience()">Open with Music 🎶</button>
+        </div>
+
+        <div id="s2" class="screen">
+            <h1>Our Love Moments</h1>
+            <div class="photo-grid">
+                <div class="photo-box"><img src="image1.jpeg"alt="1"></div>
+                <div class="photo-box"><img src="image2.jpeg" alt="2"></div>
+                <div class="photo-box"><img src="image3.jpeg" alt="3"></div>
+                <div class="photo-box"><img src="image4.jpeg" alt="4"></div>
+                <div class="photo-box"><img src="img45.jpeg"alt="5"></div>
+                <div class="photo-box"><img src="iamge6.jpeg" alt="5"></div>    
+            </div>
+            <button class="btn" onclick="go(3)">Pick a Gift ➡</button>
+        </div>
+
+        <div id="s3" class="screen">
+            <h1>Pick a Rose</h1>
+            <p>One of these roses holds a secret message...</p>
+            <div class="roses">
+                <span class="rose" onclick="wrong(this)">🌹</span>
+                <span class="rose" onclick="wrong()">🌹</span>
+                <span class="rose" onclick="correct(this)">🌹</span>
+            </div>
+            <p id="hint" style="font-weight: bold; color: var(--deep-red);"></p>
+        </div>
+
+        <div id="s4" class="screen">
+            <div class="letter">
+                <h1>From My Heart</h1>
+                <p>not a real rose baby par dekho mera pyar to poch gya na darling ,so baby i love you hume apna pyar prove krne ke liye kisi din ki jrurt nhi h its just all the days jab mujhe aap sunder lgte ,you look like rose everyday bcche.</p>
+                <p>I promise ki tumhe phool se bhi jyda smbhal rkhunga .</p>
+            </div>
+            <button class="btn" onclick="go(5)">One Final Note ✨</button>
+        </div>
+
+        <div id="s5" class="screen">
+            <div class="final-note-content">
+                <h1 style="font-size: 2.5rem;">I Love You</h1>
+                <p>Thank you for making my life this much beautiful just by your presence, i love you IRA.</p>
+                <div style="font-size: 40px; margin-top: 10px;">🧸❤️</div>
+            </div>
+            <p style="font-size: 0.8rem; margin-top: 20px; color: var(--deep-red);">Wishing you a Happy Rose Day!</p>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+
+        function startExperience() {
+            audio.play().catch(e => console.log("Music blocked"));
+            go(2);
+        }
+
+        function go(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + num).classList.add('active');
+        }
+
+        function wrong(el) {
+            el.style.opacity = "0.3";
+            document.getElementById('hint').innerText = "Not this one, try again! 😊";
+        }
+
+        function correct() {
+            document.getElementById('hint').innerText = "You found it! Opening... ✨";
+            setTimeout(() => go(4), 1500);
+        }
+
+        // Background Floating Hearts
+        function createHeart() {
+            const h = document.createElement('div');
+            h.classList.add('floating-heart');
+            h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            h.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.getElementById('heartBg').appendChild(h);
+            setTimeout(() => h.remove(), 5000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>
